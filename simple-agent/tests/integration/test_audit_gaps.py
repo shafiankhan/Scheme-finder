@@ -11,6 +11,7 @@ Covers:
 """
 
 import asyncio
+import os
 from datetime import datetime, timezone, timedelta
 from unittest.mock import AsyncMock, patch
 import pytest
@@ -224,11 +225,12 @@ def test_incomplete_scheme_criteria_handling():
 
 def test_meta_webhook_get_handshake_success():
     """Verify GET challenge handshake succeeds with the correct verify token."""
+    verify_token = os.environ.get("WHATSAPP_WEBHOOK_VERIFY_TOKEN", "scheme_finder_verify_token")
     response = client.get(
         "/api/notifications/webhook",
         params={
             "hub.mode": "subscribe",
-            "hub.verify_token": "scheme_finder_verify_token",
+            "hub.verify_token": verify_token,
             "hub.challenge": "1948209123",
         },
     )
