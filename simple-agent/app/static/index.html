@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scheme Finder - Autonomous Government Benefits Discovery</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+  <style>
+    :root { --accent: #0f766e; --accent-hover: #115e59; }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; vertical-align: middle; }
+    /* A2UI Component Styles */
+    .a2card { border: 1px solid #e2e8f0; border-radius: 10px; padding: 1rem; background: #ffffff; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-top: 0.5rem; }
+    .a2col { display: flex; flex-direction: column; gap: 0.4rem; }
+    .a2row { display: flex; flex-direction: row; gap: 0.6rem; align-items: center; flex-wrap: wrap; }
+    .a2row.between { justify-content: space-between; }
+    .a2text { margin: 0; line-height: 1.4; color: #1e293b; }
+    .a2text.a2-h1 { font-size: 1.4rem; font-weight: 700; color: #0f172a; }
+    .a2text.a2-h2 { font-size: 1.2rem; font-weight: 700; color: #0f172a; }
+    .a2text.a2-h3 { font-size: 1.05rem; font-weight: 600; }
+    .a2text.a2-caption { font-size: 0.8rem; color: #64748b; }
+    .a2divider { border: none; border-top: 1px solid #e2e8f0; margin: 0.5rem 0; width: 100%; }
+    .active-tab { border-bottom: 3px solid #0f766e; color: #0f766e; font-weight: 600; }
+    /* WhatsApp Phone Frame Mockup */
+    .phone-frame { width: 100%; max-width: 380px; height: 580px; border: 12px solid #1f2937; border-radius: 36px; display: flex; flex-direction: column; overflow: hidden; background: #e5ddd5; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.25); }
+    .wa-bubble-agent { background: #ffffff; border-radius: 8px 8px 8px 0; padding: 10px 14px; margin: 6px 0; max-width: 88%; font-size: 0.85rem; line-height: 1.35; box-shadow: 0 1px 1px rgba(0,0,0,0.1); word-break: break-word; }
+    .wa-bubble-user { background: #dcf8c6; border-radius: 8px 8px 0 8px; padding: 10px 14px; margin: 6px 0 6px auto; max-width: 88%; font-size: 0.85rem; line-height: 1.35; box-shadow: 0 1px 1px rgba(0,0,0,0.1); word-break: break-word; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans">
+
+  <!-- Top Navigation Bar -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-lg bg-teal-700 text-white flex items-center justify-center font-bold text-xl shadow">
+            <span class="material-symbols-outlined text-white text-2xl">account_balance</span>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-extrabold text-xl text-slate-900 tracking-tight">Scheme Finder</span>
+              <span class="bg-teal-100 text-teal-800 text-xs px-2 py-0.5 rounded-full font-semibold">Autonomous GovBenefits</span>
+            </div>
+            <p class="text-xs text-slate-500">Track 3: Verified Discovery, Screening & WhatsApp Alerts</p>
+          </div>
+        </div>
+
+        <!-- Citizen Selector & Quick Actions -->
+        <div class="flex items-center gap-4">
+          <div class="flex items-center gap-2 bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200">
+            <span class="text-xs font-semibold text-slate-600">Citizen:</span>
+            <select id="citizenSelect" onchange="onCitizenChanged()" class="bg-transparent text-sm font-bold text-slate-800 focus:outline-none cursor-pointer">
+              <option value="citizen-001">Ramesh Patel (Farmer, MH)</option>
+              <option value="citizen-002">Sunita Sharma (Urban, Delhi)</option>
+              <option value="citizen-003">Vikram Singh (Salaried, High Income)</option>
+              <option value="citizen-004">Priya Nair (Missing Income Info)</option>
+              <option value="citizen-005">Anand Kumar (Opted-Out)</option>
+            </select>
+          </div>
+
+          <button onclick="triggerOfficialScan()" id="btnGlobalScan" class="flex items-center gap-1.5 bg-teal-700 hover:bg-teal-800 text-white text-xs font-semibold px-3 py-2 rounded-lg transition shadow-sm">
+            <span class="material-symbols-outlined text-base" id="scanIcon">travel_explore</span>
+            <span>Scan Official Portals</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 9-Section Navigation Tabs -->
+      <nav class="flex space-x-6 overflow-x-auto text-sm border-t border-slate-100 py-1" id="tabNav">
+        <button onclick="switchTab('my-benefits')" class="tab-btn active-tab py-2.5 px-1 inline-flex items-center gap-1.5 whitespace-nowrap" data-target="my-benefits">
+          <span class="material-symbols-outlined text-lg">verified_user</span> 1. My Benefits
+        </button>
+        <button onclick="switchTab('discover')" class="tab-btn py-2.5 px-1 inline-flex items-center gap-1.5 whitespace-nowrap text-slate-600 hover:text-slate-900" data-target="discover">
+          <span class="material-symbols-outlined text-lg">explore</span> 2. Discover Schemes
+        </button>
+        <button onclick="switchTab('new-schemes')" class="tab-btn py-2.5 px-1 inline-flex items-center gap-1.5 whitespace-nowrap text-slate-600 hover:text-slate-900" data-target="new-schemes">
+          <span class="material-symbols-outlined text-lg">fiber_new</span> 3. New This Week
+        </button>
+        <button onclick="switchTab('eligibility')" class="tab-btn py-2.5 px-1 inline-flex items-center gap-1.5 whitespace-nowrap text-slate-600 hover:text-slate-900" data-target="eligibility">
+          <span class="material-symbols-outlined text-lg">rule</span> 4. Eligibility Checker
+        </button>
+        <button onclick="switchTab('whatsapp')" class="tab-btn py-2.5 px-1 inline-flex items-center gap-1.5 whitespace-nowrap text-slate-600 hover:text-slate-900" data-target="whatsapp">
+          <span class="material-symbols-outlined text-lg">sms</span> 5. WhatsApp Alerts
+        </button>
+        <button onclick="switchTab('documents')" class="tab-btn py-2.5 px-1 inline-flex items-center gap-1.5 whitespace-nowrap text-slate-600 hover:text-slate-900" data-target="documents">
+          <span class="material-symbols-outlined text-lg">folder_shared</span> 6. Required Documents
+        </button>
+        <button onclick="switchTab('deadlines')" class="tab-btn py-2.5 px-1 inline-flex items-center gap-1.5 whitespace-nowrap text-slate-600 hover:text-slate-900" data-target="deadlines">
+          <span class="material-symbols-outlined text-lg">event_upcoming</span> 7. Deadlines & Renewals
+        </button>
+        <button onclick="switchTab('sources')" class="tab-btn py-2.5 px-1 inline-flex items-center gap-1.5 whitespace-nowrap text-slate-600 hover:text-slate-900" data-target="sources">
+          <span class="material-symbols-outlined text-lg">monitoring</span> 8. Source Monitor
+        </button>
+        <button onclick="switchTab('assistant')" class="tab-btn py-2.5 px-1 inline-flex items-center gap-1.5 whitespace-nowrap text-slate-600 hover:text-slate-900" data-target="assistant">
+          <span class="material-symbols-outlined text-lg">smart_toy</span> 9. AI Assistant (A2UI)
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Statutory Screening Banner -->
+  <div class="bg-amber-50 border-b border-amber-200 px-4 py-2 text-xs text-amber-900 flex items-center justify-between">
+    <div class="max-w-7xl mx-auto flex items-center gap-2">
+      <span class="material-symbols-outlined text-amber-700 text-sm">shield_person</span>
+      <span><strong>Autonomous Preliminary Screening:</strong> This system provides AI guidance based on versioned criteria. It is not an official government approval. Applications are verified and granted exclusively by the respective government authority.</span>
+    </div>
+  </div>
+
+  <!-- Main Content Area -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+
+    <!-- SECTION 1: MY BENEFITS -->
+    <div id="sec-my-benefits" class="tab-section">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <!-- Citizen Profile Card -->
+        <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
+          <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+            <div>
+              <h2 class="text-lg font-bold text-slate-900" id="profileName">Loading Profile...</h2>
+              <p class="text-xs text-slate-500" id="profileOccupation">Farmer • Pune, Maharashtra</p>
+            </div>
+            <span class="w-10 h-10 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center font-bold">
+              <span class="material-symbols-outlined">person</span>
+            </span>
+          </div>
+
+          <div class="mt-4 space-y-2 text-sm" id="profileDetails">
+            <!-- Rendered by JS -->
+          </div>
+
+          <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
+            <span class="text-xs text-slate-500">WhatsApp Alerts:</span>
+            <span id="profileWhatsAppBadge" class="text-xs px-2 py-0.5 rounded-full font-semibold">Active</span>
+          </div>
+        </div>
+
+        <!-- Annual Benefit Summary -->
+        <div class="bg-gradient-to-br from-teal-700 to-teal-900 rounded-xl p-6 text-white shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between opacity-80 text-xs uppercase tracking-wider font-semibold">
+              <span>Potential Annual Value</span>
+              <span class="material-symbols-outlined text-teal-200">currency_rupee</span>
+            </div>
+            <div class="text-4xl font-extrabold mt-3 tracking-tight" id="totalBenefitValue">₹0</div>
+            <p class="text-xs text-teal-100 mt-2" id="benefitSummarySubtitle">Calculated across verified eligible schemes</p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-teal-600/50 flex justify-between text-xs text-teal-100">
+            <div>Likely Eligible: <strong class="text-white text-sm" id="countLikely">0</strong></div>
+            <div>Potentially Eligible: <strong class="text-white text-sm" id="countPotential">0</strong></div>
+            <div>Action Needed: <strong class="text-white text-sm" id="countAction">0</strong></div>
+          </div>
+        </div>
+
+        <!-- Quick Profile Attribute Tuner -->
+        <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
+          <h3 class="font-bold text-slate-900 text-sm mb-3 flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-teal-700 text-base">tune</span>
+            Simulate Profile Changes
+          </h3>
+          <p class="text-xs text-slate-500 mb-4">Update attributes to observe real-time deterministic eligibility adjustments.</p>
+          <div class="space-y-3 text-xs">
+            <div>
+              <label class="block font-semibold text-slate-700 mb-1">Annual Household Income (₹):</label>
+              <input type="number" id="tuneIncome" class="w-full px-2.5 py-1.5 border border-slate-200 rounded text-slate-800 text-xs font-semibold" placeholder="e.g. 120000">
+            </div>
+            <div>
+              <label class="block font-semibold text-slate-700 mb-1">Landholding (Acres):</label>
+              <input type="number" step="0.1" id="tuneLand" class="w-full px-2.5 py-1.5 border border-slate-200 rounded text-slate-800 text-xs font-semibold" placeholder="e.g. 2.5">
+            </div>
+            <button onclick="saveProfileChanges()" class="w-full bg-teal-700 hover:bg-teal-800 text-white font-semibold py-2 rounded text-xs transition">
+              Update Profile & Re-Screen
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Matches Overview -->
+      <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="font-bold text-slate-900 text-base">Personalized Eligible Welfare Programs</h3>
+          <button onclick="switchTab('eligibility')" class="text-teal-700 text-xs font-semibold hover:underline">
+            View Complete Screening Breakdown →
+          </button>
+        </div>
+        <div id="quickMatchesList" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 2: DISCOVER SCHEMES -->
+    <div id="sec-discover" class="tab-section hidden">
+      <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm mb-6">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h2 class="text-lg font-bold text-slate-900">Official Government Scheme Catalog</h2>
+            <p class="text-xs text-slate-500">All records versioned, verified against official portals (.gov.in / .nic.in)</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-3">
+            <input type="text" id="schemeSearch" oninput="filterSchemes()" placeholder="Search scheme or benefit..." class="border border-slate-200 rounded-lg px-3 py-1.5 text-xs text-slate-800 w-56">
+            <select id="categoryFilter" onchange="filterSchemes()" class="border border-slate-200 rounded-lg px-3 py-1.5 text-xs font-semibold text-slate-700">
+              <option value="all">All Categories</option>
+              <option value="agriculture">Agriculture</option>
+              <option value="healthcare">Healthcare</option>
+              <option value="housing">Housing</option>
+              <option value="women">Women & Child</option>
+              <option value="social_welfare">Social Welfare</option>
+            </select>
+            <select id="stateFilter" onchange="filterSchemes()" class="border border-slate-200 rounded-lg px-3 py-1.5 text-xs font-semibold text-slate-700">
+              <option value="all">All States / Central</option>
+              <option value="Delhi">Delhi</option>
+              <option value="Maharashtra">Maharashtra</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div id="schemesCatalogGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+
+    <!-- SECTION 3: NEW THIS WEEK -->
+    <div id="sec-new-schemes" class="tab-section hidden">
+      <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm mb-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-lg font-bold text-slate-900">Recently Discovered & Updated Schemes</h2>
+            <p class="text-xs text-slate-500">Autonomous source discovery scans monitor official gazettes and feeds every week.</p>
+          </div>
+          <button onclick="triggerOfficialScan()" class="bg-teal-700 hover:bg-teal-800 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-base">refresh</span>
+            Run Discovery Scan Now
+          </button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2 space-y-4" id="recentDiscoveriesContainer">
+          <!-- Populated by JS -->
+        </div>
+        <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm h-fit">
+          <h3 class="font-bold text-slate-900 text-sm mb-3">Discovery Metrics</h3>
+          <div class="space-y-3 text-xs" id="scanMetricsBox">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 4: ELIGIBILITY CHECKER -->
+    <div id="sec-eligibility" class="tab-section hidden">
+      <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm mb-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-lg font-bold text-slate-900">Deterministic Eligibility Breakdown</h2>
+            <p class="text-xs text-slate-500">Versioned criteria rule engine comparing profile against official guidelines.</p>
+          </div>
+          <button onclick="loadEligibility()" class="text-teal-700 text-xs font-bold hover:underline flex items-center gap-1">
+            <span class="material-symbols-outlined text-base">replay</span> Refresh Assessment
+          </button>
+        </div>
+      </div>
+
+      <div class="space-y-4" id="eligibilityResultsContainer">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+    <!-- SECTION 5: WHATSAPP ALERTS & SIMULATOR -->
+    <div id="sec-whatsapp" class="tab-section hidden">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Left Column: Controls & Audit Log -->
+        <div class="lg:col-span-7 space-y-6">
+          <!-- Consent & Preferences Card -->
+          <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 class="font-bold text-slate-900 text-base">WhatsApp Notification Consent</h3>
+                <p class="text-xs text-slate-500">Citizen must explicitly opt in. Users can text "Stop notifications" anytime.</p>
+              </div>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" id="whatsappOptInToggle" onchange="toggleWhatsAppConsent()" class="sr-only peer">
+                <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-600"></div>
+              </label>
+            </div>
+            <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-600">
+              <span>Delivery Mode: <strong id="waDeliveryModeText" class="text-slate-900">Development Simulator</strong></span>
+              <span id="waConsentStatusBadge" class="px-2 py-0.5 rounded font-semibold bg-emerald-100 text-emerald-800">Opted In</span>
+            </div>
+          </div>
+
+          <!-- Send Test Notification -->
+          <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
+            <h3 class="font-bold text-slate-900 text-sm mb-3">Trigger Scheme Alert Dispatch</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs mb-3">
+              <div>
+                <label class="block font-semibold text-slate-600 mb-1">Target Scheme:</label>
+                <select id="alertSchemeSelect" class="w-full border border-slate-200 rounded px-2.5 py-1.5 font-semibold text-slate-800">
+                  <option value="pm-kisan">PM-KISAN</option>
+                  <option value="pm-jay">Ayushman Bharat PM-JAY</option>
+                  <option value="delhi-ladli">Delhi Ladli Scheme</option>
+                  <option value="mh-mjpjay">MJPJAY Maharashtra</option>
+                </select>
+              </div>
+              <div>
+                <label class="block font-semibold text-slate-600 mb-1">Trigger Event:</label>
+                <select id="alertTriggerType" class="w-full border border-slate-200 rounded px-2.5 py-1.5 font-semibold text-slate-800">
+                  <option value="new_matching_scheme">New Matching Scheme</option>
+                  <option value="rule_change">Rule Change</option>
+                  <option value="deadline_approaching">Deadline Approaching</option>
+                  <option value="renewal_reminder">Renewal Reminder</option>
+                </select>
+              </div>
+              <div class="flex items-end">
+                <button onclick="dispatchAlert()" class="w-full bg-teal-700 hover:bg-teal-800 text-white font-semibold py-1.5 rounded transition flex items-center justify-center gap-1">
+                  <span class="material-symbols-outlined text-base">send</span> Send Alert
+                </button>
+              </div>
+            </div>
+            <p class="text-[11px] text-slate-500 italic">*If user has opted out, notification is suppressed safely without sending.</p>
+          </div>
+
+          <!-- Notification Audit Log -->
+          <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
+            <h3 class="font-bold text-slate-900 text-sm mb-3">Notification Audit Log (Firestore)</h3>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead>
+                  <tr class="border-b border-slate-200 text-slate-500 font-semibold">
+                    <th class="py-2">Scheme</th>
+                    <th class="py-2">Trigger</th>
+                    <th class="py-2">Mode</th>
+                    <th class="py-2">Status</th>
+                    <th class="py-2">Time</th>
+                  </tr>
+                </thead>
+                <tbody id="notificationLogTable" class="divide-y divide-slate-100 text-slate-700">
+                  <!-- Populated by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Interactive WhatsApp Simulator Phone -->
+        <div class="lg:col-span-5 flex flex-col items-center">
+          <div class="text-center mb-3">
+            <h3 class="font-bold text-slate-900 text-sm">Interactive WhatsApp Simulator</h3>
+            <p class="text-xs text-slate-500">Live preview of alerts & conversational two-way replies</p>
+          </div>
+
+          <div class="phone-frame">
+            <!-- WA Header -->
+            <div class="bg-teal-800 text-white px-4 py-3 flex items-center gap-3 shadow z-10">
+              <span class="material-symbols-outlined text-xl">arrow_back</span>
+              <div class="w-9 h-9 rounded-full bg-teal-600 flex items-center justify-center font-bold text-sm">🏛️</div>
+              <div class="flex-1">
+                <div class="font-bold text-sm leading-tight">Scheme Finder Verified</div>
+                <div class="text-[10px] text-teal-200">Official GovBenefits Bot</div>
+              </div>
+            </div>
+
+            <!-- WA Chat Message Scroll Area -->
+            <div class="flex-1 p-3 overflow-y-auto" id="waChatMessages">
+              <!-- Initial Greeting Bubble -->
+              <div class="wa-bubble-agent">
+                <strong>Namaste!</strong> Welcome to Scheme Finder. I provide verified government welfare benefit alerts.<br><br>
+                Try typing:<br>
+                • <code>Find schemes for me</code><br>
+                • <code>Why am I eligible?</code><br>
+                • <code>What documents do I need?</code><br>
+                • <code>Stop notifications</code>
+              </div>
+            </div>
+
+            <!-- WA Quick Reply Suggestion Chips -->
+            <div class="bg-slate-100 px-2 py-1.5 flex gap-1.5 overflow-x-auto text-[11px] border-t border-slate-200">
+              <button onclick="sendQuickWAMsg('Find schemes for me')" class="bg-white border border-slate-300 rounded-full px-2.5 py-1 whitespace-nowrap text-slate-700 hover:bg-slate-50">Find schemes for me</button>
+              <button onclick="sendQuickWAMsg('Why am I eligible?')" class="bg-white border border-slate-300 rounded-full px-2.5 py-1 whitespace-nowrap text-slate-700 hover:bg-slate-50">Why am I eligible?</button>
+              <button onclick="sendQuickWAMsg('What documents do I need?')" class="bg-white border border-slate-300 rounded-full px-2.5 py-1 whitespace-nowrap text-slate-700 hover:bg-slate-50">Documents?</button>
+              <button onclick="sendQuickWAMsg('Stop notifications')" class="bg-white border border-red-300 rounded-full px-2.5 py-1 whitespace-nowrap text-red-700 hover:bg-red-50">Stop</button>
+            </div>
+
+            <!-- WA Input Box -->
+            <form onsubmit="handleWASubmit(event)" class="bg-white p-2 flex items-center gap-2 border-t border-slate-200">
+              <input type="text" id="waInputText" placeholder="Type a message..." class="flex-1 text-xs px-3 py-2 bg-slate-100 rounded-full border border-slate-200 focus:outline-none focus:border-teal-600">
+              <button type="submit" class="w-8 h-8 rounded-full bg-teal-700 text-white flex items-center justify-center">
+                <span class="material-symbols-outlined text-sm">send</span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 6: REQUIRED DOCUMENTS -->
+    <div id="sec-documents" class="tab-section hidden">
+      <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm mb-6">
+        <h2 class="text-lg font-bold text-slate-900">Personalized Application Document Checklist</h2>
+        <p class="text-xs text-slate-500">Cross-referenced against your profile attributes and official ministry requirements.</p>
+      </div>
+
+      <div class="space-y-4" id="documentsListContainer">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+    <!-- SECTION 7: DEADLINES & RENEWALS -->
+    <div id="sec-deadlines" class="tab-section hidden">
+      <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm mb-6">
+        <h2 class="text-lg font-bold text-slate-900">Application Deadlines & Annual Renewal Windows</h2>
+        <p class="text-xs text-slate-500">Verified official dates only. Expired schemes are automatically archived and not shown as open.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="deadlinesListContainer">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+    <!-- SECTION 8: SOURCE MONITOR -->
+    <div id="sec-sources" class="tab-section hidden">
+      <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm mb-6 flex items-center justify-between">
+        <div>
+          <h2 class="text-lg font-bold text-slate-900">Approved Official Government Source Registry</h2>
+          <p class="text-xs text-slate-500">Autonomous scanner validates source authority (.gov.in/.nic.in) and tracks content hashes.</p>
+        </div>
+        <button onclick="triggerOfficialScan()" class="bg-teal-700 hover:bg-teal-800 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-base">sync</span> Run Full Scan
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2 space-y-4" id="sourcesRegistryContainer">
+          <!-- Populated by JS -->
+        </div>
+
+        <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm h-fit">
+          <h3 class="font-bold text-slate-900 text-sm mb-3">Governance & Verification Rules</h3>
+          <ul class="space-y-2 text-xs text-slate-600 list-disc pl-4">
+            <li><strong>Domain Authority:</strong> Only official .gov.in, .nic.in, or myScheme endpoints allowed.</li>
+            <li><strong>Duplicate Suppression:</strong> SHA-256 fingerprinting prevents repeated alerts for minor formatting edits.</li>
+            <li><strong>Fault Tolerance:</strong> Broken or timed-out portals logged without crashing scan cycles.</li>
+            <li><strong>Review Barrier:</strong> Conflicting data or pending gazettes tagged <em>under_review</em>.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 9: AI ASSISTANT (WITH A2UI RENDERER) -->
+    <div id="sec-assistant" class="tab-section hidden">
+      <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm mb-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-lg font-bold text-slate-900">Scheme Finder Autonomous Assistant</h2>
+            <p class="text-xs text-slate-500">Grounded in deterministic tools with full A2UI v0.8 card rendering.</p>
+          </div>
+          <span class="bg-teal-100 text-teal-800 text-xs px-2.5 py-1 rounded-full font-bold">gemini-3.8-flash + A2UI</span>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col h-[650px] overflow-hidden">
+        <!-- Messages Area -->
+        <div class="flex-1 p-4 overflow-y-auto space-y-4" id="assistantChatLog">
+          <div class="flex items-start gap-3">
+            <div class="w-8 h-8 rounded-full bg-teal-700 text-white flex items-center justify-center font-bold text-xs shrink-0">AI</div>
+            <div class="bg-slate-100 rounded-xl p-4 text-xs text-slate-800 max-w-2xl leading-relaxed">
+              Hello! I am your <strong>Scheme Finder Assistant</strong>. I can examine your profile, evaluate versioned eligibility rules, generate application checklists, and monitor official portals.<br><br>
+              How can I assist you right now?
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Prompt Chips -->
+        <div class="bg-slate-50 px-4 py-2 border-t border-slate-200 flex gap-2 overflow-x-auto text-xs">
+          <button onclick="sendAssistantQuery('What schemes am I eligible for?')" class="bg-white border border-slate-300 rounded-full px-3 py-1 whitespace-nowrap text-slate-700 hover:bg-slate-100 font-medium">What schemes am I eligible for?</button>
+          <button onclick="sendAssistantQuery('What documents do I need for PM-KISAN?')" class="bg-white border border-slate-300 rounded-full px-3 py-1 whitespace-nowrap text-slate-700 hover:bg-slate-100 font-medium">PM-KISAN documents?</button>
+          <button onclick="sendAssistantQuery('Show me new schemes this week')" class="bg-white border border-slate-300 rounded-full px-3 py-1 whitespace-nowrap text-slate-700 hover:bg-slate-100 font-medium">New schemes this week</button>
+          <button onclick="sendAssistantQuery('Upcoming deadlines')" class="bg-white border border-slate-300 rounded-full px-3 py-1 whitespace-nowrap text-slate-700 hover:bg-slate-100 font-medium">Upcoming deadlines</button>
+        </div>
+
+        <!-- Input Bar -->
+        <form onsubmit="handleAssistantSubmit(event)" class="p-3 bg-white border-t border-slate-200 flex items-center gap-2">
+          <input type="text" id="assistantInput" placeholder="Ask about schemes, eligibility, documents, or application steps..." class="flex-1 border border-slate-300 rounded-lg px-4 py-2.5 text-xs focus:outline-none focus:border-teal-700">
+          <button type="submit" id="btnAssistantSend" class="bg-teal-700 hover:bg-teal-800 text-white text-xs font-semibold px-5 py-2.5 rounded-lg transition flex items-center gap-1.5">
+            <span>Ask</span>
+            <span class="material-symbols-outlined text-sm">send</span>
+          </button>
+        </form>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Application Checklist Modal -->
+  <div id="appPacketModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] flex flex-col overflow-hidden shadow-2xl">
+      <div class="px-6 py-4 bg-teal-800 text-white flex items-center justify-between">
+        <div>
+          <h3 class="font-bold text-base" id="modalSchemeTitle">Application Preparation Packet</h3>
+          <p class="text-xs text-teal-200">Personalized submission guidance & pre-filled draft</p>
+        </div>
+        <button onclick="closeAppModal()" class="text-white hover:text-teal-200">
+          <span class="material-symbols-outlined text-xl">close</span>
+        </button>
+      </div>
+      <div class="p-6 overflow-y-auto space-y-4 text-xs" id="modalPacketBody">
+        <!-- Rendered by JS -->
+      </div>
+      <div class="px-6 py-3 bg-slate-50 border-t border-slate-200 flex items-center justify-between">
+        <span class="text-[11px] text-slate-500">Always submit through the official portal.</span>
+        <button onclick="closeAppModal()" class="px-4 py-2 bg-slate-200 text-slate-800 font-semibold rounded text-xs">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Frontend Logic & A2UI Mini-Renderer -->
+  <script>
+    let currentCitizenId = "citizen-001";
+    let currentCitizen = null;
+    let cachedSchemes = [];
+
+    // Tab Switching
+    function switchTab(tabId) {
+      document.querySelectorAll(".tab-section").forEach(sec => sec.classList.add("hidden"));
+      const target = document.getElementById("sec-" + tabId);
+      if (target) target.classList.remove("hidden");
+
+      document.querySelectorAll(".tab-btn").forEach(btn => {
+        if (btn.getAttribute("data-target") === tabId) {
+          btn.classList.add("active-tab");
+          btn.classList.remove("text-slate-600");
+        } else {
+          btn.classList.remove("active-tab");
+          btn.classList.add("text-slate-600");
+        }
+      });
+
+      if (tabId === "eligibility") loadEligibility();
+      if (tabId === "documents") loadDocuments();
+      if (tabId === "deadlines") loadDeadlines();
+      if (tabId === "sources") loadSources();
+      if (tabId === "new-schemes") loadNewSchemes();
+      if (tabId === "whatsapp") loadWhatsAppAudit();
+    }
+
+    // Citizen Change
+    async function onCitizenChanged() {
+      currentCitizenId = document.getElementById("citizenSelect").value;
+      await loadCitizenProfile();
+      await loadEligibility();
+      await loadWhatsAppAudit();
+    }
+
+    // Load Profile
+    async function loadCitizenProfile() {
+      try {
+        const res = await fetch(`/api/citizens/${currentCitizenId}`);
+        currentCitizen = await res.json();
+
+        document.getElementById("profileName").textContent = currentCitizen.full_name;
+        document.getElementById("profileOccupation").textContent = 
+          `${(currentCitizen.occupation || "Resident").toUpperCase()} • ${currentCitizen.district ? currentCitizen.district + ", " : ""}${currentCitizen.state}`;
+
+        const detailsEl = document.getElementById("profileDetails");
+        detailsEl.innerHTML = `
+          <div class="flex justify-between py-1 border-b border-slate-50">
+            <span class="text-slate-500">Age / Gender:</span>
+            <span class="font-semibold text-slate-800">${currentCitizen.age} yrs • ${currentCitizen.gender}</span>
+          </div>
+          <div class="flex justify-between py-1 border-b border-slate-50">
+            <span class="text-slate-500">Annual Income:</span>
+            <span class="font-semibold text-slate-800">${currentCitizen.household_income != null ? '₹' + currentCitizen.household_income.toLocaleString('en-IN') : '<span class="text-amber-600 font-bold">Unrecorded</span>'}</span>
+          </div>
+          <div class="flex justify-between py-1 border-b border-slate-50">
+            <span class="text-slate-500">Residency:</span>
+            <span class="font-semibold text-slate-800">${currentCitizen.residency_type.toUpperCase()}</span>
+          </div>
+          <div class="flex justify-between py-1 border-b border-slate-50">
+            <span class="text-slate-500">Landholding:</span>
+            <span class="font-semibold text-slate-800">${currentCitizen.landholding_acres != null ? currentCitizen.landholding_acres + ' Acres' : 'None / Unrecorded'}</span>
+          </div>
+          <div class="flex justify-between py-1">
+            <span class="text-slate-500">Social Category:</span>
+            <span class="font-semibold text-slate-800 uppercase">${currentCitizen.social_category}</span>
+          </div>
+        `;
+
+        const waBadge = document.getElementById("profileWhatsAppBadge");
+        const waToggle = document.getElementById("whatsappOptInToggle");
+        const waStatus = document.getElementById("waConsentStatusBadge");
+        if (currentCitizen.whatsapp_opt_in) {
+          waBadge.textContent = "Opted In";
+          waBadge.className = "text-xs px-2 py-0.5 rounded-full font-semibold bg-emerald-100 text-emerald-800";
+          waToggle.checked = true;
+          waStatus.textContent = "Opted In (Active)";
+          waStatus.className = "px-2 py-0.5 rounded font-semibold bg-emerald-100 text-emerald-800";
+        } else {
+          waBadge.textContent = "Opted Out";
+          waBadge.className = "text-xs px-2 py-0.5 rounded-full font-semibold bg-rose-100 text-rose-800";
+          waToggle.checked = false;
+          waStatus.textContent = "Opted Out (Alerts Suppressed)";
+          waStatus.className = "px-2 py-0.5 rounded font-semibold bg-rose-100 text-rose-800";
+        }
+
+        document.getElementById("tuneIncome").value = currentCitizen.household_income || "";
+        document.getElementById("tuneLand").value = currentCitizen.landholding_acres || "";
+
+      } catch (err) {
+        console.error("Error loading citizen:", err);
+      }
+    }
+
+    // Save Profile Tuner
+    async function saveProfileChanges() {
+      const incVal = document.getElementById("tuneIncome").value;
+      const landVal = document.getElementById("tuneLand").value;
+      const payload = {};
+      if (incVal !== "") payload.household_income = parseInt(incVal);
+      if (landVal !== "") payload.landholding_acres = parseFloat(landVal);
+
+      await fetch(`/api/citizens/${currentCitizenId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      await loadCitizenProfile();
+      await loadEligibility();
+      alert("Citizen profile updated! Re-evaluated eligibility across all schemes.");
+    }
+
+    // Load Schemes
+    async function loadSchemes() {
+      const res = await fetch("/api/schemes");
+      cachedSchemes = await res.json();
+      renderSchemesGrid(cachedSchemes);
+    }
+
+    function renderSchemesGrid(schemes) {
+      const grid = document.getElementById("schemesCatalogGrid");
+      grid.innerHTML = schemes.map(s => `
+        <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between text-xs mb-2">
+              <span class="px-2 py-0.5 rounded font-semibold uppercase bg-slate-100 text-slate-700">${s.category}</span>
+              <span class="px-2 py-0.5 rounded font-semibold ${s.status === 'verified' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-amber-50 text-amber-700 border border-amber-200'}">${s.status}</span>
+            </div>
+            <h3 class="font-bold text-slate-900 text-sm mb-1">${s.name}</h3>
+            <p class="text-xs text-slate-500 mb-3">${s.ministry}</p>
+            <div class="bg-teal-50 border-l-2 border-teal-600 p-2.5 rounded text-xs text-teal-900 mb-3">
+              <strong>Verified Benefit:</strong> ${s.verified_benefit}
+            </div>
+          </div>
+          <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+            <button onclick="viewApplicationPacket('${s.scheme_id}')" class="text-teal-700 font-bold hover:underline">
+              Application Guide →
+            </button>
+            <a href="${s.official_portal_url}" target="_blank" class="text-slate-500 hover:text-slate-800 flex items-center gap-1">
+              <span>Portal</span>
+              <span class="material-symbols-outlined text-xs">open_in_new</span>
+            </a>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function filterSchemes() {
+      const query = document.getElementById("schemeSearch").value.toLowerCase();
+      const cat = document.getElementById("categoryFilter").value;
+      const st = document.getElementById("stateFilter").value;
+
+      const filtered = cachedSchemes.filter(s => {
+        const matchesQuery = s.name.toLowerCase().includes(query) || s.verified_benefit.toLowerCase().includes(query);
+        const matchesCat = cat === "all" || s.category === cat;
+        const matchesState = st === "all" || s.level === "central" || (s.state_name && s.state_name.toLowerCase() === st.toLowerCase());
+        return matchesQuery && matchesCat && matchesState;
+      });
+      renderSchemesGrid(filtered);
+    }
+
+    // Load Eligibility
+    async function loadEligibility() {
+      const res = await fetch("/api/eligibility/assess", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ citizen_id: currentCitizenId }),
+      });
+      const data = await res.json();
+      const assessments = data.assessments || [];
+
+      let likely = 0, potential = 0, action = 0, totalVal = 0;
+      assessments.forEach(a => {
+        if (a.status === "likely_eligible") { likely++; totalVal += 6000; } // approximate
+        else if (a.status === "potentially_eligible") potential++;
+        else if (a.status === "insufficient_information") action++;
+      });
+
+      document.getElementById("countLikely").textContent = likely;
+      document.getElementById("countPotential").textContent = potential;
+      document.getElementById("countAction").textContent = action;
+      document.getElementById("totalBenefitValue").textContent = likely > 0 ? "₹" + (likely * 100000).toLocaleString('en-IN') : "₹0";
+
+      // Render Quick Matches in Section 1
+      const quickEl = document.getElementById("quickMatchesList");
+      const topMatches = assessments.filter(a => a.status === "likely_eligible" || a.status === "potentially_eligible");
+      if (topMatches.length === 0) {
+        quickEl.innerHTML = `<p class="text-xs text-slate-500 col-span-2">No matching schemes under current profile.</p>`;
+      } else {
+        quickEl.innerHTML = topMatches.map(m => `
+          <div class="p-3 border border-slate-200 rounded-lg flex justify-between items-center bg-slate-50">
+            <div>
+              <span class="text-[10px] px-1.5 py-0.5 rounded font-bold uppercase ${m.status === 'likely_eligible' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">${m.status.replace('_', ' ')}</span>
+              <h4 class="font-bold text-slate-900 text-xs mt-1">${m.scheme_name}</h4>
+              <p class="text-[11px] text-slate-600 line-clamp-1">${m.verified_benefit}</p>
+            </div>
+            <button onclick="viewApplicationPacket('${m.scheme_id}')" class="text-teal-700 text-xs font-bold shrink-0 ml-3 hover:underline">Apply →</button>
+          </div>
+        `).join("");
+      }
+
+      // Render Section 4 Breakdown Cards
+      const elCont = document.getElementById("eligibilityResultsContainer");
+      elCont.innerHTML = assessments.map(a => {
+        let badgeClass = "bg-slate-100 text-slate-700";
+        let statusTitle = "Ineligible";
+        if (a.status === "likely_eligible") {
+          badgeClass = "bg-emerald-100 text-emerald-800 border border-emerald-300";
+          statusTitle = "Likely Eligible";
+        } else if (a.status === "potentially_eligible") {
+          badgeClass = "bg-amber-100 text-amber-800 border border-amber-300";
+          statusTitle = "Potentially Eligible (Review Required)";
+        } else if (a.status === "insufficient_information") {
+          badgeClass = "bg-orange-100 text-orange-800 border border-orange-300";
+          statusTitle = "Insufficient Information";
+        } else {
+          badgeClass = "bg-rose-100 text-rose-800 border border-rose-300";
+          statusTitle = "Ineligible Under Versioned Criteria";
+        }
+
+        const satHtml = a.conditions_satisfied.map(c => `<li class="text-emerald-700 flex items-center gap-1.5"><span class="material-symbols-outlined text-sm">check_circle</span> ${c}</li>`).join("");
+        const failHtml = a.conditions_failed.map(c => `<li class="text-rose-700 flex items-center gap-1.5"><span class="material-symbols-outlined text-sm">cancel</span> ${c}</li>`).join("");
+        const unverHtml = a.conditions_unverified.map(c => `<li class="text-amber-700 flex items-center gap-1.5"><span class="material-symbols-outlined text-sm">info</span> ${c}</li>`).join("");
+
+        let followUpHtml = "";
+        if (a.follow_up_questions && a.follow_up_questions.length > 0) {
+          followUpHtml = `
+            <div class="mt-3 p-3 bg-orange-50 border border-orange-200 rounded-lg text-xs">
+              <strong class="text-orange-900 block mb-1">Follow-up needed:</strong>
+              ${a.follow_up_questions.map(q => `<p class="text-orange-800 mb-2">${q}</p>`).join("")}
+              <button onclick="switchTab('my-benefits')" class="bg-orange-700 text-white font-semibold px-2.5 py-1 rounded text-[11px]">Enter in Profile Tuner →</button>
+            </div>
+          `;
+        }
+
+        return `
+          <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-100 gap-2">
+              <div>
+                <span class="text-xs px-2.5 py-0.5 rounded-full font-bold uppercase ${badgeClass}">${statusTitle}</span>
+                <h3 class="font-bold text-slate-900 text-sm mt-1.5">${a.scheme_name}</h3>
+              </div>
+              <button onclick="viewApplicationPacket('${a.scheme_id}')" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold px-3 py-1.5 rounded transition">
+                Prepare Application Packet
+              </button>
+            </div>
+
+            <div class="mt-3 text-xs space-y-2">
+              <div class="text-slate-700"><strong>Verified Benefit:</strong> ${a.verified_benefit || 'Listed on portal'}</div>
+              ${satHtml ? `<ul class="space-y-1">${satHtml}</ul>` : ''}
+              ${unverHtml ? `<ul class="space-y-1">${unverHtml}</ul>` : ''}
+              ${failHtml ? `<ul class="space-y-1">${failHtml}</ul>` : ''}
+              ${followUpHtml}
+            </div>
+
+            <div class="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
+              <span>Deadline: ${a.verified_deadline || 'Rolling application'}</span>
+              <a href="${a.official_portal_url}" target="_blank" class="text-teal-700 font-semibold hover:underline">Official Portal ↗</a>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    // Load WhatsApp Audit Log
+    async function loadWhatsAppAudit() {
+      const res = await fetch(`/api/notifications?citizen_id=${currentCitizenId}`);
+      const notifs = await res.json();
+      const table = document.getElementById("notificationLogTable");
+      if (notifs.length === 0) {
+        table.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-slate-400">No alerts dispatched yet.</td></tr>`;
+        return;
+      }
+      table.innerHTML = notifs.map(n => {
+        let stClass = "bg-slate-100 text-slate-700";
+        if (n.delivery_status === "delivered") stClass = "bg-emerald-100 text-emerald-800 font-bold";
+        else if (n.delivery_status === "simulated") stClass = "bg-blue-100 text-blue-800 font-bold";
+        else if (n.delivery_status === "opted_out_suppressed") stClass = "bg-amber-100 text-amber-800 font-bold";
+        else if (n.delivery_status === "failed") stClass = "bg-rose-100 text-rose-800 font-bold";
+
+        return `
+          <tr class="hover:bg-slate-50">
+            <td class="py-2.5 font-semibold text-slate-800">${n.scheme_name}</td>
+            <td class="py-2.5 capitalize">${n.trigger_type.replace(/_/g, ' ')}</td>
+            <td class="py-2.5 font-mono text-[11px]">${n.delivery_mode === 'real_cloud_api' ? 'Cloud API' : 'Simulator'}</td>
+            <td class="py-2.5"><span class="px-2 py-0.5 rounded text-[10px] ${stClass}">${n.delivery_status}</span></td>
+            <td class="py-2.5 text-slate-400">${new Date(n.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    // Toggle WhatsApp Consent
+    async function toggleWhatsAppConsent() {
+      const optIn = document.getElementById("whatsappOptInToggle").checked;
+      await fetch(`/api/citizens/${currentCitizenId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ whatsapp_opt_in: optIn }),
+      });
+      await loadCitizenProfile();
+      await loadWhatsAppAudit();
+    }
+
+    // Dispatch WhatsApp Alert
+    async function dispatchAlert() {
+      const schemeId = document.getElementById("alertSchemeSelect").value;
+      const trigger = document.getElementById("alertTriggerType").value;
+
+      const res = await fetch("/api/notifications/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          citizen_id: currentCitizenId,
+          scheme_id: schemeId,
+          trigger_type: trigger,
+        }),
+      });
+      const data = await res.json();
+
+      // Append to WA Simulator phone screen
+      const waLog = document.getElementById("waChatMessages");
+      const bubble = document.createElement("div");
+      bubble.className = "wa-bubble-agent";
+      bubble.innerHTML = data.message_body.replace(/\n/g, "<br>");
+      waLog.appendChild(bubble);
+      waLog.scrollTop = waLog.scrollHeight;
+
+      await loadWhatsAppAudit();
+    }
+
+    // Interactive WA Inbound Chat
+    async function handleWASubmit(e) {
+      e.preventDefault();
+      const input = document.getElementById("waInputText");
+      const msg = input.value.trim();
+      if (!msg) return;
+      input.value = "";
+      sendQuickWAMsg(msg);
+    }
+
+    async function sendQuickWAMsg(text) {
+      const waLog = document.getElementById("waChatMessages");
+
+      // User Bubble
+      const userBubble = document.createElement("div");
+      userBubble.className = "wa-bubble-user";
+      userBubble.textContent = text;
+      waLog.appendChild(userBubble);
+      waLog.scrollTop = waLog.scrollHeight;
+
+      // Call conversational webhook
+      const res = await fetch("/api/notifications/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          phone_number: currentCitizen ? currentCitizen.phone_number : "+919876543210",
+          message: text,
+        }),
+      });
+      const data = await res.json();
+
+      // Bot Reply Bubble
+      const botBubble = document.createElement("div");
+      botBubble.className = "wa-bubble-agent";
+      botBubble.innerHTML = data.reply.replace(/\n/g, "<br>");
+      waLog.appendChild(botBubble);
+      waLog.scrollTop = waLog.scrollHeight;
+
+      await loadCitizenProfile();
+      await loadWhatsAppAudit();
+    }
+
+    // Trigger Official Scan
+    async function triggerOfficialScan() {
+      const btn = document.getElementById("btnGlobalScan");
+      const icon = document.getElementById("scanIcon");
+      icon.classList.add("animate-spin");
+      btn.disabled = true;
+
+      try {
+        const res = await fetch("/api/sources/scan", { method: "POST" });
+        const log = await res.json();
+        alert(`Autonomous Scan Complete!\n${log.summary}`);
+        await loadSchemes();
+        await loadEligibility();
+        await loadNewSchemes();
+      } catch (err) {
+        alert("Scan encountered an error: " + err);
+      } finally {
+        icon.classList.remove("animate-spin");
+        btn.disabled = false;
+      }
+    }
+
+    // Load Documents
+    async function loadDocuments() {
+      const res = await fetch("/api/schemes");
+      const schemes = await res.json();
+      const cont = document.getElementById("documentsListContainer");
+      cont.innerHTML = schemes.filter(s => s.status === 'verified').map(s => `
+        <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+            <h3 class="font-bold text-slate-900 text-sm">${s.name}</h3>
+            <a href="${s.official_portal_url}" target="_blank" class="text-xs text-teal-700 font-semibold hover:underline">Official Portal ↗</a>
+          </div>
+          <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
+            ${s.required_documents.map(d => `
+              <div class="p-2.5 bg-slate-50 border border-slate-200 rounded flex items-center gap-2">
+                <input type="checkbox" class="w-4 h-4 text-teal-600 rounded">
+                <span class="font-medium text-slate-800">${d}</span>
+              </div>
+            `).join("")}
+          </div>
+        </div>
+      `).join("");
+    }
+
+    // Load Deadlines
+    async function loadDeadlines() {
+      const res = await fetch("/api/deadlines");
+      const deadlines = await res.json();
+      const cont = document.getElementById("deadlinesListContainer");
+      cont.innerHTML = deadlines.map(d => {
+        let badgeClass = "bg-emerald-100 text-emerald-800";
+        if (d.urgency === "critical") badgeClass = "bg-rose-100 text-rose-800 font-bold";
+        else if (d.urgency === "high") badgeClass = "bg-amber-100 text-amber-800 font-bold";
+
+        return `
+          <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm flex flex-col justify-between">
+            <div>
+              <span class="text-[10px] px-2 py-0.5 rounded font-bold uppercase ${badgeClass}">${d.badge_label}</span>
+              <h3 class="font-bold text-slate-900 text-sm mt-2">${d.scheme_name}</h3>
+              <p class="text-xs text-slate-500 mt-1">${d.state_name}</p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+              <span class="font-semibold text-slate-700">Deadline: ${d.verified_deadline}</span>
+              <a href="${d.official_portal_url}" target="_blank" class="text-teal-700 font-bold hover:underline">Apply ↗</a>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    // Load Sources
+    async function loadSources() {
+      const res = await fetch("/api/sources");
+      const sources = await res.json();
+      const cont = document.getElementById("sourcesRegistryContainer");
+      cont.innerHTML = sources.map(s => `
+        <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-sm flex items-center justify-between">
+          <div>
+            <div class="flex items-center gap-2">
+              <h4 class="font-bold text-slate-900 text-xs">${s.name}</h4>
+              <span class="text-[10px] px-1.5 py-0.2 rounded font-bold uppercase ${s.last_status === 'healthy' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">${s.last_status}</span>
+            </div>
+            <p class="text-[11px] text-slate-500 font-mono mt-0.5">${s.url}</p>
+          </div>
+          <div class="text-right text-[11px] text-slate-400">
+            <div>Check Interval: ${s.check_interval_hours} hrs</div>
+            <div>Scanned: ${s.last_scanned_at ? new Date(s.last_scanned_at).toLocaleDateString() : 'Pending'}</div>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    // Load New This Week
+    async function loadNewSchemes() {
+      const res = await fetch("/api/sources/logs");
+      const logs = await res.json();
+      const cont = document.getElementById("recentDiscoveriesContainer");
+      const metrics = document.getElementById("scanMetricsBox");
+
+      if (logs.length === 0) {
+        cont.innerHTML = `<p class="text-xs text-slate-500">No scan history recorded.</p>`;
+        return;
+      }
+
+      const latest = logs[0];
+      metrics.innerHTML = `
+        <div class="flex justify-between"><span>Last Scan:</span><strong>${new Date(latest.timestamp).toLocaleString()}</strong></div>
+        <div class="flex justify-between"><span>Sources Scanned:</span><strong>${latest.sources_scanned.length}</strong></div>
+        <div class="flex justify-between"><span>Duplicates Suppressed:</span><strong>${latest.duplicate_suppressed_count}</strong></div>
+        <div class="flex justify-between"><span>Verification Status:</span><strong class="text-emerald-700">${latest.verification_status}</strong></div>
+      `;
+
+      cont.innerHTML = logs.map(l => `
+        <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
+          <div class="flex items-center justify-between text-xs text-slate-500 pb-2 border-b border-slate-100">
+            <span>Scan ID: <strong class="text-slate-800">${l.scan_id}</strong></span>
+            <span>${new Date(l.timestamp).toLocaleString()}</span>
+          </div>
+          <p class="text-xs text-slate-700 mt-2 font-medium">${l.summary}</p>
+          ${l.changes_detected.length > 0 ? `
+            <div class="mt-3 space-y-1">
+              ${l.changes_detected.map(c => `
+                <div class="p-2 bg-slate-50 rounded border border-slate-200 text-xs">
+                  <span class="font-bold text-teal-800">${c.change_type.toUpperCase()}:</span> ${c.scheme_name} — ${c.evidence_snippet}
+                </div>
+              `).join("")}
+            </div>
+          ` : ''}
+        </div>
+      `).join("");
+    }
+
+    // View Application Packet Modal
+    async function viewApplicationPacket(schemeId) {
+      const res = await fetch("/api/applications/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          citizen_id: currentCitizenId,
+          scheme_id: schemeId,
+        }),
+      });
+      const packet = await res.json();
+
+      document.getElementById("modalSchemeTitle").textContent = packet.scheme_name;
+      const body = document.getElementById("modalPacketBody");
+      body.innerHTML = `
+        <div class="p-3 bg-teal-50 border border-teal-200 rounded-lg">
+          <strong class="text-teal-900 block mb-1">Official Portal:</strong>
+          <a href="${packet.official_portal_url}" target="_blank" class="text-teal-700 font-bold hover:underline">${packet.official_portal_url} ↗</a>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-slate-900 mb-2">Step-by-Step Submission Roadmap:</h4>
+          <div class="space-y-2">
+            ${packet.steps.map(s => `
+              <div class="p-2.5 bg-slate-50 border border-slate-200 rounded">
+                <span class="font-bold text-teal-800">Step ${s.step_number}: ${s.title}</span>
+                <p class="text-slate-600 mt-0.5">${s.instructions}</p>
+              </div>
+            `).join("")}
+          </div>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-slate-900 mb-2">Required Document Verification:</h4>
+          <div class="space-y-1.5">
+            ${packet.required_documents.map(d => `
+              <div class="p-2 rounded border ${d.is_provided ? 'bg-emerald-50 border-emerald-200 text-emerald-900' : 'bg-amber-50 border-amber-200 text-amber-900'}">
+                <strong>${d.document_name}:</strong> ${d.description} (${d.notes})
+              </div>
+            `).join("")}
+          </div>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-slate-900 mb-2">Pre-Filled Form Values:</h4>
+          <pre class="bg-slate-900 text-teal-400 p-3 rounded font-mono text-[11px] overflow-x-auto">${JSON.stringify(packet.prefilled_draft, null, 2)}</pre>
+        </div>
+      `;
+
+      document.getElementById("appPacketModal").classList.remove("hidden");
+    }
+
+    function closeAppModal() {
+      document.getElementById("appPacketModal").classList.add("hidden");
+    }
+
+    // SECTION 9: ASSISTANT CHAT & A2UI RENDERER
+    async function handleAssistantSubmit(e) {
+      e.preventDefault();
+      const input = document.getElementById("assistantInput");
+      const text = input.value.trim();
+      if (!text) return;
+      input.value = "";
+      await sendAssistantQuery(text);
+    }
+
+    async function sendAssistantQuery(text) {
+      const chatLog = document.getElementById("assistantChatLog");
+
+      // User Message
+      const userDiv = document.createElement("div");
+      userDiv.className = "flex items-start justify-end gap-3";
+      userDiv.innerHTML = `
+        <div class="bg-teal-700 text-white rounded-xl p-3.5 text-xs max-w-xl leading-relaxed">
+          ${text}
+        </div>
+      `;
+      chatLog.appendChild(userDiv);
+      chatLog.scrollTop = chatLog.scrollHeight;
+
+      // Loading Indicator
+      const loadingDiv = document.createElement("div");
+      loadingDiv.className = "flex items-start gap-3";
+      loadingDiv.id = "assistantLoadingIndicator";
+      loadingDiv.innerHTML = `
+        <div class="w-8 h-8 rounded-full bg-teal-700 text-white flex items-center justify-center font-bold text-xs shrink-0">AI</div>
+        <div class="bg-slate-100 rounded-xl p-3 text-xs text-slate-500 animate-pulse">
+          Evaluating official records & formulating response...
+        </div>
+      `;
+      chatLog.appendChild(loadingDiv);
+      chatLog.scrollTop = chatLog.scrollHeight;
+
+      try {
+        const res = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: text, citizen_id: currentCitizenId }),
+        });
+        const data = await res.json();
+
+        const indicator = document.getElementById("assistantLoadingIndicator");
+        if (indicator) indicator.remove();
+
+        const botDiv = document.createElement("div");
+        botDiv.className = "flex items-start gap-3";
+        botDiv.innerHTML = `
+          <div class="w-8 h-8 rounded-full bg-teal-700 text-white flex items-center justify-center font-bold text-xs shrink-0">AI</div>
+          <div class="bg-slate-100 rounded-xl p-4 text-xs text-slate-800 max-w-2xl leading-relaxed prose prose-sm">
+            ${data.response.replace(/### (.*)/g, '<h4 class="font-bold text-slate-900 mt-2 mb-1">$1</h4>').replace(/\n/g, '<br>')}
+          </div>
+        `;
+        chatLog.appendChild(botDiv);
+        chatLog.scrollTop = chatLog.scrollHeight;
+      } catch (err) {
+        const indicator = document.getElementById("assistantLoadingIndicator");
+        if (indicator) indicator.remove();
+        console.error("Assistant chat error:", err);
+      }
+    }
+
+    // Initialize Dashboard
+    window.addEventListener("DOMContentLoaded", async () => {
+      await loadCitizenProfile();
+      await loadSchemes();
+      await loadEligibility();
+      await loadWhatsAppAudit();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+# Google Cloud Scheduler Job Specification: Scheme Finder Weekly Monitoring
+# Reference: gcloud scheduler jobs create http / Cloud Scheduler v1 API
+
+name: projects/PROJECT_ID/locations/REGION/jobs/scheme-finder-weekly-monitor
+description: "Weekly automated government source discovery scan for Scheme Finder"
+schedule: "0 0 * * 1"  # Every Monday at 00:00 UTC
+timeZone: "UTC"
+attemptDeadline: "600s"
+
+httpTarget:
+  uri: "https://SERVICE_URL/api/sources/scan"
+  httpMethod: POST
+  headers:
+    User-Agent: "Google-Cloud-Scheduler/1.0 (SchemeFinder-Discovery)"
+    Content-Type: "application/json"
+  body: "{}"
+  
+  # Secure OIDC Authentication for Cloud Run target
+  oidcToken:
+    serviceAccountEmail: "scheme-finder-scheduler@PROJECT_ID.iam.gserviceaccount.com"
+    audience: "https://SERVICE_URL"
+
+retryConfig:
+  retryCount: 3
+  maxRetryDuration: "3600s"
+  minBackoffDuration: "10s"
+  maxBackoffDuration: "300s"
+  maxDoublings: 3
