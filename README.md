@@ -4,43 +4,330 @@
 
 # 🚀 Build with Gemini · Track 3
 
-### The starter kit for Track 3 of the Build with Gemini World Tour, and a showcase of what participants built with it.
+## 🏛️ Scheme Finder: Autonomous Government Benefits Discovery Agent
 
-Clone this repo, open [Antigravity](https://antigravity.google), and build your own agent-first app on Google Cloud. Every project in the [gallery below](#-featured-projects) was built the same way: prototyped with Antigravity and `agents-cli`, equipped with Memory, tools, and storage, deployed to Agent Platform, and given a face on Cloud Run.
+### *An AI-powered, agent-first platform that helps citizens discover welfare benefits, automatically assess eligibility using transparent deterministic rules, monitor official government portals with SHA-256 change detection, and receive timely notifications through consent-aware WhatsApp alerts.*
 
 <br/>
 
-![Build with Gemini](https://img.shields.io/badge/Build%20with%20Gemini-World%20Tour-4285F4?logo=google&logoColor=white)
+![Build with Gemini](https://img.shields.io/badge/Build%20with%20Gemini-World%20Tour%20Track%203-4285F4?logo=google&logoColor=white)
 ![Track 3](https://img.shields.io/badge/Track%203-Agent--First%20Apps-EA4335)
-![Google Cloud](https://img.shields.io/badge/Google%20Cloud-Agent%20Platform-4285F4?logo=googlecloud&logoColor=white)
-![Built with ADK](https://img.shields.io/badge/Built%20with-ADK%20%2B%20agents--cli-34A853)
-![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)
-![Projects](https://img.shields.io/badge/Projects-8-blue)
+![Google ADK](https://img.shields.io/badge/Google%20ADK-Agent%20Development%20Kit-34A853?logo=google&logoColor=white)
+![Model](https://img.shields.io/badge/Model-Gemini%202.5%20Flash-blue?logo=googlegemini&logoColor=white)
+![Cloud Firestore](https://img.shields.io/badge/Google%20Cloud-Firestore-FFCA28?logo=firebase&logoColor=black)
+![Tests](https://img.shields.io/badge/Tests-53%20Passed%20%7C%200%20Failed-success?logo=pytest&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.13-3776AB?logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688?logo=fastapi&logoColor=white)
 
-<sub>📖 <a href="https://cszhu.github.io/build-with-gemini/">Lab Guide</a> · 🛠️ <a href="https://google.github.io/agents-cli/guide/getting-started/">agents-cli</a> · 🤖 <a href="https://google.github.io/adk-docs/">ADK</a></sub>
+<sub>Built for the **Google Cloud: Build with Gemini (Track 3: Agent-First Applications)** Hackathon & Project Gallery</sub>
 
 </div>
 
 ---
 
-## 📚 Table of Contents
+## 📖 Table of Contents
 
-- [🧩 Anatomy of a Track 3 Project](#-anatomy-of-a-track-3-project)
-- [📂 Featured Projects](#-featured-projects)
-  - [🏛️ Civic Tech & Social Welfare Agents](#️-civic-tech--social-welfare-agents)
-  - [🛍️ Commerce & Marketplace Agents](#️-commerce--marketplace-agents)
-  - [🍳 Food & Recipe Agents](#-food--recipe-agents)
-  - [✈️ Travel & Local Agents](#️-travel--local-agents)
-  - [💪 Health, Fitness & Wellness Agents](#-health-fitness--wellness-agents)
-  - [📚 Learning & Knowledge Agents](#-learning--knowledge-agents)
-  - [🎨 Creative & Media Agents](#-creative--media-agents)
-  - [🏢 Productivity & Enterprise Agents](#-productivity--enterprise-agents)
-  - [🧪 Experimental & Other](#-experimental--other)
-- [🧠 What's in this Repo](#-whats-in-this-repo)
-- [🧰 Build Your Own](#-build-your-own)
-- [📚 Resources](#-resources)
-- [🤝 Contributing](#-contributing)
-- [📄 License](#-license)
+- [🏛️ Part I: Scheme Finder — Autonomous Benefits Discovery Agent](#️-part-i-scheme-finder--autonomous-benefits-discovery-agent)
+  - [🎯 Problem Statement & Mission](#-problem-statement--mission)
+  - [🏗️ System Architecture](#-system-architecture)
+  - [✨ Key Features & Capabilities](#-key-features--capabilities)
+  - [👥 Synthetic Citizen Personas](#-synthetic-citizen-personas)
+  - [📜 Verified Schemes & Statutory Caveats](#-verified-schemes--statutory-caveats)
+  - [🔍 Official Source Monitoring & Change Detection](#-official-source-monitoring--change-detection)
+  - [💬 Consent-Aware WhatsApp Integration](#-consent-aware-whatsapp-integration)
+  - [🪟 Google ADK & A2UI Native Display](#-google-adk--a2ui-native-display)
+  - [🧪 Verification & Test Results (53/53 Passing)](#-verification--test-results-5353-passing)
+  - [⚡ Quickstart: Running Scheme Finder Locally](#-quickstart-running-scheme-finder-locally)
+  - [📁 Repository Structure](#-repository-structure)
+  - [🎙️ Demo Guide](#-demo-guide)
+- [🚀 Part II: Build with Gemini Track 3 Workshop & Starter Kit](#-part-ii-build-with-gemini-track-3-workshop--starter-kit)
+  - [🧩 Anatomy of a Track 3 Project](#-anatomy-of-a-track-3-project)
+  - [📂 Featured Projects Gallery](#-featured-projects-gallery)
+  - [🧠 What's in this Repo](#-whats-in-this-repo)
+  - [🧰 Build Your Own](#-build-your-own)
+  - [📚 Resources](#-resources)
+  - [🤝 Contributing](#-contributing)
+  - [📄 License](#-license)
+
+---
+
+# 🏛️ Part I: Scheme Finder — Autonomous Benefits Discovery Agent
+
+## 🎯 Problem Statement & Mission
+
+Every year, millions of eligible citizens miss out on life-changing government welfare benefits—such as financial stipends, health insurance, housing subsidies, and educational scholarships. The barriers are systemic:
+
+1. **Information Asymmetry**: Schemes are fragmented across dozens of central ministries and state-level portals with no unified discovery mechanism.
+2. **Opaque & Complex Rules**: Citizen eligibility criteria (income thresholds, landholdings, categorical exclusions) are buried in dense circulars that ordinary citizens cannot parse.
+3. **Missed Deadlines & Silent Updates**: Governments regularly extend application windows or release supplemental guidelines, but citizens only learn about them after windows close.
+4. **Channel Inaccessibility**: Disadvantaged populations frequently lack desktop internet access or computer literacy, relying primarily on mobile messaging platforms like WhatsApp.
+
+**Scheme Finder** solves this by combining the reasoning power of **Google ADK** and **Gemini 2.5 Flash** with **100% deterministic legal eligibility evaluation**, autonomous portal change detection, and WhatsApp alert delivery that strictly respects citizen consent.
+
+---
+
+## 🏗️ System Architecture
+
+```mermaid
+graph TD
+    subgraph Channels ["User Channels"]
+        Browser["Citizen Web Dashboard<br/>(Tailwind CSS + A2UI)"]
+        WhatsAppUser["WhatsApp Citizen User<br/>(Mobile Messaging)"]
+    end
+
+    subgraph FastAPILayer ["FastAPI Application Layer (Cloud Run / Local)"]
+        APIRouter["FastAPI REST API (/api)"]
+        StaticServer["Static Dashboard Server (/dashboard)"]
+        WebhookHandler["Meta Webhook Handler (/api/notifications/webhook)"]
+    end
+
+    subgraph ADKLayer ["Google ADK Agent Framework"]
+        Agent["Root Agent: scheme_finder_agent<br/>(gemini-2.5-flash)"]
+        A2UICallback["after_model_callback: a2ui_callback"]
+        Tools["10 Registered ADK Tools"]
+    end
+
+    subgraph CoreEngine ["Deterministic Core Services"]
+        EligibilityEngine["Deterministic Rule Evaluator<br/>(app/eligibility.py)"]
+        SourceMonitor["Autonomous Source Monitor<br/>(app/monitor.py)"]
+        WhatsAppDispatcher["Consent-Aware WhatsApp Dispatcher<br/>(app/whatsapp.py)"]
+        AppSupport["Application & Checklist Generator<br/>(app/application_support.py)"]
+    end
+
+    subgraph Storage ["Persistence Layer"]
+        FirestoreDB[("Google Cloud Firestore<br/>(citizens, schemes, scans, notifs)")]
+    end
+
+    Browser -->|HTTP REST| APIRouter
+    Browser -->|Static Files| StaticServer
+    WhatsAppUser -->|Inbound Webhook| WebhookHandler
+    APIRouter --> ADKLayer
+    WebhookHandler --> WhatsAppDispatcher
+    ADKLayer --> Tools
+    Tools --> CoreEngine
+    CoreEngine --> Storage
+    WhatsAppDispatcher -->|Meta Graph API| WhatsAppUser
+```
+
+---
+
+## ✨ Key Features & Capabilities
+
+### 1. 100% Deterministic Legal Rules Engine
+- Evaluates citizen eligibility using rigorous Python logic ([`app/eligibility.py`](simple-agent/app/eligibility.py)), **never** relying on LLM hallucination for legal qualification.
+- Classifies each match into: `likely_eligible`, `potentially_eligible`, `unlikely_eligible`, or `information_needed`.
+- Computes satisfied conditions, failing conditions, and flags unverified requirements (e.g., land registry verification, certificate renewals) with transparency.
+
+### 2. Autonomous Official Source Monitoring & Change Detection
+- Periodically polls official `.gov.in` and `.nic.in` gazettes ([`app/monitor.py`](simple-agent/app/monitor.py)).
+- Computes SHA-256 content hashes with whitespace normalization to eliminate duplicate notifications.
+- Automatically flags updates such as **deadline extensions**, benefit adjustments, or criteria revisions.
+- Strictly isolates non-whitelisted or unverified sources into an `under_review` quarantine.
+
+### 3. Consent-Aware WhatsApp Integration
+- Dual-mode delivery: Supports live **Meta WhatsApp Business Cloud API** and an interactive **in-browser simulator** for testing without credentials.
+- **Strict Opt-Out Protection**: Automatically suppresses outgoing notifications for opted-out citizens with zero message leakage.
+- Inbound conversational triage handling commands like *"Find schemes for me"*, *"Why am I eligible?"*, *"What documents do I need?"*, and *"Stop notifications"*.
+
+### 4. Actionable Application Support Packets
+- Generates tailored application checklists, required document guides, portal direct links, and submission deadlines.
+- Flags official fee schedules (e.g., verifying that government scheme applications are 100% free of charge).
+
+### 5. Interactive 9-Section Tailwind Dashboard & A2UI Display
+- Full web frontend served directly at `/dashboard` displaying:
+  1. Citizen Profiles & Personas
+  2. Scheme Catalog (Central & State)
+  3. Interactive Eligibility Screener
+  4. Application Packet Generator
+  5. Official Sources & Health Monitor
+  6. Autonomous Scan Activity Logs
+  7. WhatsApp Alert Center & Delivery Logs
+  8. Interactive Mobile WhatsApp Chat Simulator
+  9. Live ADK Agent Chat with visual A2UI cards
+
+---
+
+## 👥 Synthetic Citizen Personas
+
+Scheme Finder includes five realistic synthetic personas to test diverse socio-economic criteria:
+
+| Persona ID | Name | Age | State | Income | Profile Highlights | Target Schemes |
+|---|---|---|---|---|---|---|
+| `citizen-001` | **Ramesh Patel** | 42 | Gujarat | ₹1,20,000 | Small farmer (2.5 acres landholding) | PM-KISAN, PM-JAY |
+| `citizen-002` | **Sunita Sharma** | 35 | Madhya Pradesh | ₹85,000 | Married woman, low-income household | Ladli Behna Yojana, PM-JAY |
+| `citizen-003` | **Vikram Singh** | 22 | Rajasthan | ₹60,000 | Enrolled undergraduate student | PM Vidyalaxmi, State Scholarship |
+| `citizen-004` | **Lakshmi Bai** | 68 | Karnataka | ₹40,000 | Elderly widow, BPL household | National Old Age Pension, PM-JAY |
+| `citizen-005` | **Anand Kumar** | 52 | Maharashtra | ₹2,40,000 | Self-employed shopkeeper, WhatsApp Opted Out | Opt-Out Suppression Benchmark |
+
+---
+
+## 📜 Verified Schemes & Statutory Caveats
+
+All active schemes are strictly grounded in authoritative central and state government circulars:
+
+1. **PM-KISAN (Pradhan Mantri Kisan Samman Nidhi)**: ₹6,000/yr in 3 installments for landholding farmer families.
+2. **PM-JAY (Ayushman Bharat)**: ₹5,00,000/yr secondary/tertiary health insurance for bottom 40% vulnerable families (SECC 2011).
+3. **Mukhyamantri Ladli Behna Yojana (MP)**: ₹1,250/mo direct benefit transfer for eligible women aged 21–60 in Madhya Pradesh.
+4. **PM SVANidhi**: Micro-credit collateral-free working capital loans (₹10,000 to ₹50,000) for urban street vendors.
+5. **Delhi Ladli Scheme**: Financial assistance deposited in the name of girl children at schooling milestones (Delhi NCT only).
+6. **National Social Assistance Programme (IGNOAPS)**: Monthly pension for BPL citizens aged 60+.
+
+---
+
+## 🔍 Official Source Monitoring & Change Detection
+
+The monitoring daemon inspects verified public portals and computes deterministic SHA-256 hashes:
+
+```
+[Official Portal URL]
+         │
+         ▼
+[HTTP Client with Timeout & Retry]
+         │
+         ▼
+[Whitespace Normalization & SHA-256 Hash]
+         │
+         ├─── Hash Matches Previous? ──► [Duplicate Suppressed / No Spam]
+         │
+         └─── Hash Differs / New Content?
+                     │
+                     ▼
+             [Schema Difference Detector]
+                     │
+                     ├── Deadline Extended ──► [Notify Matching Citizens]
+                     ├── Benefit Changed   ──► [Flag Updated Scheme]
+                     └── Source Inaccessible ─► [Mark Degraded, Alert Admin]
+```
+
+---
+
+## 💬 Consent-Aware WhatsApp Integration
+
+Scheme Finder supports both real Meta Cloud API dispatch and zero-dependency local simulation:
+
+- **Opt-Out Safety Guarantee**: When a citizen replies `"STOP"` or has `whatsapp_opt_in = False`, notifications are marked `opted_out_suppressed` and zero network requests are dispatched.
+- **Inbound Interactive Webhook**: Supports challenge handshake validation (`hub.mode=subscribe` and `hub.verify_token`) and secure `X-Hub-Signature-256` HMAC validation.
+- **In-Browser Phone Simulator**: Interactive UI in the dashboard lets workshop judges test WhatsApp conversations in real time without requiring a Meta Developer account.
+
+---
+
+## 🪟 Google ADK & A2UI Native Display
+
+Scheme Finder utilizes Google's **Agent Development Kit (ADK)**:
+- **Model**: `gemini-2.5-flash` via Vertex AI Agent Platform.
+- **A2UI Callback**: Transforms structured responses into Google A2UI card schemas (`AdaptiveCard`, `FactSet`, `Action.OpenUrl`).
+- **10 Core Tools**: `assess_eligibility_tool`, `get_matching_schemes_tool`, `generate_application_packet_tool`, `get_upcoming_deadlines_tool`, `trigger_source_monitor_tool`, `send_whatsapp_notification_tool`, `update_whatsapp_preference_tool`, `get_official_sources_tool`, `get_scan_logs_tool`, and `search_schemes_tool`.
+
+---
+
+## 🧪 Verification & Test Results (53/53 Passing)
+
+The complete automated test suite covers unit logic, integration flows, and end-to-end edge cases:
+
+```bash
+GOOGLE_CLOUD_PROJECT=qwiklabs-gcp-04-54fac5b784e7 uv run pytest tests/ -v
+```
+
+| Test Module | Coverage Area | Tests | Status |
+|---|---|---|---|
+| `tests/unit/test_eligibility.py` | Statutory criteria, income thresholds, state rules, missing attributes | 5 | ✅ 5/5 PASSED |
+| `tests/unit/test_monitoring.py` | SHA-256 hashing, diffing, source authority verification, error recovery | 6 | ✅ 6/6 PASSED |
+| `tests/unit/test_notifications.py` | WhatsApp formatter, simulator, opt-out suppression, error fallback | 6 | ✅ 6/6 PASSED |
+| `tests/integration/test_agent.py` | ADK reasoning loop, tool execution, SSE streaming | 1 | ✅ 1/1 PASSED |
+| `tests/integration/test_api_endpoints.py` | REST API routes, dashboard HTML serving, chat simulator | 4 | ✅ 4/4 PASSED |
+| `tests/integration/test_scheme_finder_scenarios.py` | 12 end-to-end Track 3 workshop rubric scenarios | 17 | ✅ 17/17 PASSED |
+| `tests/integration/test_server_e2e.py` | A2A streaming, Reasoning Engine endpoints, Agent Card metadata | 4 | ✅ 4/4 PASSED |
+| `tests/integration/test_audit_gaps.py` | Stale data detection, HTTP 409 concurrency lock, Meta webhook handshake | 10 | ✅ 10/10 PASSED |
+| **Total Test Suite** | **Full application coverage** | **53** | **✅ 53/53 PASSED (100%)** |
+
+---
+
+## ⚡ Quickstart: Running Scheme Finder Locally
+
+### 1. Prerequisites
+- Python 3.13+ installed
+- `uv` package manager installed (`curl -LsSf https://astral.sh/uv/install.sh | sh`)
+- Google Cloud Project with Vertex AI enabled (`gcloud auth login`)
+
+### 2. Clone & Install
+```bash
+git clone https://github.com/shafiankhan/Scheme-finder.git
+cd Scheme-finder/simple-agent
+uv sync
+```
+
+### 3. Configure Environment Variables
+```bash
+cp .env.example .env
+export GOOGLE_CLOUD_PROJECT="your-gcp-project-id"
+export GOOGLE_CLOUD_LOCATION="global"
+```
+
+### 4. Run the Server
+```bash
+uv run python -m app.fast_api_app
+```
+
+The application runs at `http://localhost:8000`:
+- **Web Dashboard**: [`http://localhost:8000/dashboard`](http://localhost:8000/dashboard)
+- **Interactive OpenAPI Docs**: [`http://localhost:8000/docs`](http://localhost:8000/docs)
+- **Health Check**: [`http://localhost:8000/api/health`](http://localhost:8000/api/health)
+
+---
+
+## 📁 Repository Structure
+
+```text
+Scheme-finder/
+├── assets/
+│   └── build-with-gemini-banner.png  # Build with Gemini official workshop banner
+├── .agents/                          # Workshop skills and pre-configured MCP tools
+├── DEMO_GUIDE.md                     # 5-minute hackathon pitch script & live demo flow
+├── project_brief.md                  # Track 3 project brief & tool coverage checklist
+├── README.md                         # This comprehensive showcase documentation
+└── simple-agent/
+    ├── Dockerfile                    # Production Cloud Run container buildfile
+    ├── pyproject.toml                # Dependencies & configuration
+    ├── agents-cli-manifest.yaml      # Agent Platform manifest
+    ├── deploy/
+    │   └── cloud_scheduler_job.yaml    # Declarative Cloud Scheduler cron job
+    ├── docs/
+    │   ├── CLOUD_SCHEDULER_SETUP.md    # Cloud Scheduler provisioning guide
+    │   └── WHATSAPP_SETUP.md           # Meta WhatsApp Cloud API credentials guide
+    ├── app/
+    │   ├── agent.py                  # Google ADK Root Agent (10 tools & A2UI)
+    │   ├── a2ui_utils.py             # Google A2UI card renderer
+    │   ├── api_routes.py             # 19 REST API endpoints
+    │   ├── application_support.py    # Application packet generation & deadlines
+    │   ├── db.py                     # Cloud Firestore repository with fallback
+    │   ├── eligibility.py            # Deterministic legal eligibility rules
+    │   ├── fast_api_app.py           # FastAPI server & background scheduler
+    │   ├── models.py                 # Pydantic schemas
+    │   ├── monitor.py                # Official portal monitor & SHA-256 change detector
+    │   ├── seed_data.py              # Personas & grounded schemes seed data
+    │   ├── whatsapp.py               # WhatsApp Cloud API client & simulator
+    │   └── static/
+    │       └── index.html            # 9-section Tailwind CSS dashboard & simulator UI
+    └── tests/
+        ├── unit/                     # Unit tests (eligibility, monitor, notifications)
+        └── integration/              # Integration tests, scenarios & audit gaps
+```
+
+---
+
+## 🎙️ Demo Guide
+
+For a step-by-step judge walkthrough, consult [`DEMO_GUIDE.md`](DEMO_GUIDE.md), which outlines a timed 5-minute live demo covering citizen eligibility assessments, WhatsApp simulator triage, official circular change detection, and ADK agent interactions.
+
+---
+
+# 🚀 Part II: Build with Gemini Track 3 Workshop & Starter Kit
+
+Clone this repo, open [Antigravity](https://antigravity.google), and build your own agent-first app on Google Cloud. Every project in the [gallery below](#-featured-projects-gallery) was built the same way: prototyped with Antigravity and `agents-cli`, equipped with Memory, tools, and storage, deployed to Agent Platform, and given a face on Cloud Run.
+
+<br/>
+
+<sub>📖 <a href="https://cszhu.github.io/build-with-gemini/">Lab Guide</a> · 🛠️ <a href="https://google.github.io/agents-cli/guide/getting-started/">agents-cli</a> · 🤖 <a href="https://google.github.io/adk-docs/">ADK</a></sub>
 
 ---
 
@@ -62,16 +349,9 @@ Every app in this collection is built from the same set of Google Cloud building
 
 ---
 
-## 📂 Featured Projects
+## 📂 Featured Projects Gallery
 
 A showcase of what workshop participants built with this lab. Entries are added here from the swag and gallery submission form after each event, so the categories below start empty and fill in over time. Browse them for inspiration, or [submit your own](#-contributing) once you've published your project with the `publish-to-github` skill.
-
-<!--
-Add one entry per project, in this format:
-- 🌿 **[Project Name](https://github.com/their-handle/their-repo)**: one-line description of what it does. <br/> <sub>by [@handle](https://github.com/handle)</sub>
-
-Bump the "Projects" badge count at the top when you add one.
--->
 
 ### 🏛️ Civic Tech & Social Welfare Agents
 
@@ -192,7 +472,7 @@ Then follow the [lab guide](https://cszhu.github.io/build-with-gemini/) to desig
 
 ## 🤝 Contributing
 
-**Built something?** Publish it with the `publish-to-github` skill and submit it through the form it gives you. Submissions get you swag, and standout projects get added to the [Featured Projects](#-featured-projects) gallery above.
+**Built something?** Publish it with the `publish-to-github` skill and submit it through the form it gives you. Submissions get you swag, and standout projects get added to the [Featured Projects](#-featured-projects-gallery) gallery above.
 
 **Found a bug?** If you hit a rough edge in a skill or the lab, please [open an issue](https://github.com/cszhu/build-with-gemini/issues).
 
