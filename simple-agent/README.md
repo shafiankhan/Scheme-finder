@@ -123,21 +123,18 @@ Populates Cloud Firestore with 5 representative citizen profiles, 5 verified gov
 GOOGLE_CLOUD_PROJECT=qwiklabs-gcp-04-54fac5b784e7 uv run python -m app.seed_data
 ```
 
-### 4. Run the Test Suite (38/38 Tests Passing)
+### 4. Run the Complete Test Suite (53/53 Tests Passing)
 ```bash
-GOOGLE_CLOUD_PROJECT=qwiklabs-gcp-04-54fac5b784e7 uv run pytest \
-  tests/unit/ \
-  tests/integration/test_scheme_finder_scenarios.py \
-  tests/integration/test_api_endpoints.py -v
+GOOGLE_CLOUD_PROJECT=your-gcp-project-id uv run pytest tests/ -v
 ```
 
 ### 5. Launch the Web Application
 ```bash
-GOOGLE_CLOUD_PROJECT=qwiklabs-gcp-04-54fac5b784e7 uv run uvicorn app.fast_api_app:app --host 0.0.0.0 --port 8000
+GOOGLE_CLOUD_PROJECT=your-gcp-project-id uv run uvicorn app.fast_api_app:app --host 0.0.0.0 --port 8000
 ```
 Then navigate to:
 - **Interactive Dashboard**: `http://localhost:8000/dashboard`
-- **ADK Web Playground**: `http://localhost:8000/`
+- **Interactive OpenAPI Docs**: `http://localhost:8000/docs`
 - **API Health Check**: `http://localhost:8000/api/health`
 
 ---
